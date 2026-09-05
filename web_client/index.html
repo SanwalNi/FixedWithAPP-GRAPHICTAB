@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a0a0f">
+    <title>Alamy - Low-Latency Mobile Graphics Tablet</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Portrait Warning Overlay -->
+    <div id="portrait-warning">
+        <div class="warning-content">
+            <div class="warning-icon">📱 🔄 📺</div>
+            <h2>Please Rotate Your Device</h2>
+            <p>Alamy is designed for landscape mode to maximize your drawing area.</p>
+            <button id="btn-force-landscape">Tap to Rotate & Fullscreen</button>
+        </div>
+    </div>
+
+    <div id="app-container">
+        <!-- Status Header HUD -->
+        <header id="hud-header">
+            <div class="hud-left">
+                <div class="brand">
+                    <span class="logo-dot"></span>
+                    <span class="brand-title">ALAMY</span>
+                    <span class="version-badge">PRO</span>
+                </div>
+                <div id="conn-status" class="status-badge disconnected">
+                    <span class="status-indicator"></span>
+                    <span id="conn-text">Connecting...</span>
+                </div>
+            </div>
+
+            <div class="hud-stats">
+                <div class="stat-item">
+                    <span class="stat-label">RATE</span>
+                    <span id="stat-rate" class="stat-value">0 Hz</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">LATENCY</span>
+                    <span id="stat-latency" class="stat-value">< 1 ms</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">PRESSURE</span>
+                    <span id="stat-pressure" class="stat-value">0%</span>
+                </div>
+            </div>
+
+            <div class="hud-right">
+                <!-- Buttons moved to bottom toolbar -->
+            </div>
+        </header>
+
+        <!-- Main Touch & Tablet Drawing Area -->
+        <main id="touch-surface">
+            <!-- Background aspect-ratio guide and active bounding box -->
+            <div id="tablet-active-zone">
+                <div class="grid-crosshair center"></div>
+                <div class="corner-marker top-left"></div>
+                <div class="corner-marker top-right"></div>
+                <div class="corner-marker bottom-left"></div>
+                <div class="corner-marker bottom-right"></div>
+                
+                <canvas id="feedback-canvas"></canvas>
+            </div>
+            
+            <div id="touch-hint" class="touch-hint">
+                <div class="hint-icon">✍️</div>
+                <div class="hint-title">Draw or Touch Anywhere</div>
+                <div class="hint-sub">Sub-millisecond USB input active</div>
+            </div>
+        </main>
+
+        <!-- Mobile Drawing & Control Toolbar (Fixed Bottom) -->
+        <aside id="bottom-toolbar">
+            <div class="mode-toggles">
+                <button id="btn-mode-tablet" class="mode-btn active">
+                    <span>🎨 Tablet</span>
+                </button>
+                <button id="btn-mode-trackpad" class="mode-btn">
+                    <span>🖱️ Trackpad</span>
+                </button>
+            </div>
+
+            <div class="quick-actions">
+                <button class="action-btn" id="btn-undo" title="Undo (Ctrl+Z)">↶ Undo</button>
+                <button class="action-btn" id="btn-redo" title="Redo (Ctrl+Y)">↷ Redo</button>
+                <button class="action-btn" id="btn-eraser" title="Eraser (E)">🧹 Eraser</button>
+                <button class="action-btn" id="btn-rightclick" title="Right Click">🖱️ Right</button>
+            </div>
+
+            <div class="toolbar-right">
+                <button id="btn-settings" class="icon-btn" title="Settings">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal-backdrop hidden">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h2>Tablet Preferences</h2>
+                    <button id="btn-close-modal" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-row">
+                        <label for="cfg-aspect">Aspect Ratio Guide</label>
+                        <select id="cfg-aspect">
+                            <option value="16/9">16:9 Standard PC Display</option>
+                            <option value="16/10">16:10 Laptop Display</option>
+                            <option value="21/9">21:9 Ultra-Wide</option>
+                            <option value="stretch">Fill Mobile Screen (Stretch)</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="cfg-pressure-curve">Pressure Sensitivity</label>
+                        <select id="cfg-pressure-curve">
+                            <option value="linear">Linear (1:1)</option>
+                            <option value="soft">Soft (Lighter touch)</option>
+                            <option value="hard">Firm (Harder press)</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="cfg-feedback">Visual Trail Feedback</label>
+                        <input type="checkbox" id="cfg-feedback" checked>
+                    </div>
+                    <div class="setting-row">
+                        <label for="cfg-wakelock">Keep Screen Awake</label>
+                        <input type="checkbox" id="cfg-wakelock" checked>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

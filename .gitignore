@@ -1,0 +1,32 @@
+# ---- Build outputs ----
+bin/
+engine-v2/bin/
+android-app/app/build/
+android-app/build/
+.gradle/
+.kotlin/
+build/
+
+# ---- Machine-specific config ----
+local.properties
+
+# ---- Logs & temp files ----
+*.log
+*.tmp
+
+# ---- SDK installers cache ----
+downloads/
+
+# ---- Build artifacts ----
+*.apk
+*.aab
+*.exe
+
+# ---- IDE ----
+.idea/
+*.iml
+.vscode/
+
+# ---- OS junk ----
+Thumbs.db
+.DS_Store

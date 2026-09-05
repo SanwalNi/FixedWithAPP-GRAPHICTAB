@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Raw TCP over adb reverse tunnel -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Keep CPU awake during long drawing sessions -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Force high refresh rate persistence -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <application
+        android:label="Alamy Tablet"
+        android:icon="@drawable/ic_launcher"
+        android:theme="@android:style/Theme.Material.NoActionBar"
+        android:allowBackup="false"
+        android:hardwareAccelerated="true"
+        android:supportsRtl="false">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:resizeableActivity="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|density|uiMode"
+            android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
